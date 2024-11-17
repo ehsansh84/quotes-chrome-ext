@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Random Quote and Weather Extension",
+  "version": "1.0",
+  "description": "Displays random quotes and weather information",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": ["geolocation"]
+}
