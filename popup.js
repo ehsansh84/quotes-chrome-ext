@@ -18,8 +18,8 @@ function displayRandomQuote() {
   document.getElementById('author').textContent = `- ${quote.author}`;
 }
 
-function getWeather(latitude, longitude) {
-  const url = `https://wttr.in/${latitude},${longitude}?format=j1`;
+function getWeather() {
+  const url = `https://wttr.in/Erlangen?format=j1`;
 
   fetch(url)
     .then(response => response.json())
@@ -27,7 +27,7 @@ function getWeather(latitude, longitude) {
       const weatherDiv = document.getElementById('weather');
       const currentCondition = data.current_condition[0];
       weatherDiv.innerHTML = `
-        <h3>Weather in ${data.nearest_area[0].areaName[0].value}</h3>
+        <h3>Weather in Erlangen</h3>
         <p>Temperature: ${currentCondition.temp_C}°C / ${currentCondition.temp_F}°F</p>
         <p>Condition: ${currentCondition.weatherDesc[0].value}</p>
         <p>Humidity: ${currentCondition.humidity}%</p>
@@ -42,16 +42,47 @@ function getWeather(latitude, longitude) {
 document.addEventListener('DOMContentLoaded', function() {
   displayRandomQuote();
   document.getElementById('newQuote').addEventListener('click', displayRandomQuote);
+  getWeather(); // Call getWeather directly without geolocation
+});
 
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      position => getWeather(position.coords.latitude, position.coords.longitude),
-      error => {
-        console.error('Error getting location:', error);
-        document.getElementById('weather').textContent = 'Unable to get location';
+
+function getRandomFinancialNews() {
+  const googleNewsRssUrl = 'https://news.google.com/rss/search?q=finance&hl=en-US&gl=US&ceid=US:en';
+
+  fetch(googleNewsRssUrl)
+    .then(response => response.text())
+    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+    .then(data => {
+      const items = data.querySelectorAll('item');
+      if (items.length > 0) {
+        const randomIndex = Math.floor(Math.random() * items.length);
+        const item = items[randomIndex];
+        const title = item.querySelector('title').textContent;
+        const link = item.querySelector('link').textContent;
+        const pubDate = item.querySelector('pubDate').textContent;
+
+        const newsDiv = document.getElementById('news');
+        newsDiv.innerHTML = `
+          <h3>Financial News</h3>
+          <p><strong>${title}</strong></p>
+          <p>Published: ${new Date(pubDate).toLocaleString()}</p>
+          <a href="${link}" target="_blank">Read more</a>
+        `;
+      } else {
+        document.getElementById('news').textContent = 'No financial news available at the moment.';
       }
-    );
-  } else {
-    document.getElementById('weather').textContent = 'Geolocation is not supported by this browser';
-  }
+    })
+    .catch(error => {
+      console.error('Error fetching news:', error);
+      document.getElementById('news').textContent = 'Unable to fetch financial news.';
+    });
+}
+
+// ... (rest of your code)
+
+document.addEventListener('DOMContentLoaded', function() {
+  displayRandomQuote();
+  document.getElementById('newQuote').addEventListener('click', displayRandomQuote);
+  getWeather(); // Assuming you're still using the weather function
+  getRandomFinancialNews(); // Add this line to fetch and display news
 });
