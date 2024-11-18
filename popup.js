@@ -42,7 +42,7 @@ function getWeather() {
 document.addEventListener('DOMContentLoaded', function() {
   displayRandomQuote();
   document.getElementById('newQuote').addEventListener('click', displayRandomQuote);
-  getWeather(); // Call getWeather directly without geolocation
+  getWeather();
 });
 
 
@@ -83,6 +83,6 @@ function getRandomFinancialNews() {
 document.addEventListener('DOMContentLoaded', function() {
   displayRandomQuote();
   document.getElementById('newQuote').addEventListener('click', displayRandomQuote);
-  getWeather(); // Assuming you're still using the weather function
-  getRandomFinancialNews(); // Add this line to fetch and display news
+  getWeather();
+  getRandomFinancialNews();
 });
